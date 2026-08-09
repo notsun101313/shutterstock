@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あなたのスマホ、5万円を眠らせてます｜写真×ChatGPT副業</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fdf4ef;
+    --cream-deep:#f7e9e0;
+    --blush:#f6c9d2;
+    --rose:#e07f97;
+    --rose-deep:#c85c78;
+    --plum:#6a3a56;
+    --mauve:#8a5a8f;
+    --gold:#c9a063;
+    --ink:#4a3244;
+    --ink-soft:#8a7480;
+    --white:#fffdfb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:linear-gradient(180deg,var(--cream) 0%,var(--cream-deep) 100%);
+    font-family:'Zen Kaku Gothic New',sans-serif;
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+  }
+  .page{
+    width:100%;
+    max-width:460px;
+    background:var(--white);
+    min-height:100vh;
+    position:relative;
+    box-shadow:0 0 40px rgba(180,110,130,0.12);
+  }
+  a{color:inherit;}
+
+  /* ---------- shared bits ---------- */
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    letter-spacing:.14em;
+    font-weight:700;
+    color:var(--rose-deep);
+    background:linear-gradient(90deg,var(--blush),var(--cream-deep));
+    padding:6px 16px;
+    border-radius:999px;
+  }
+  .section{
+    padding:44px 26px;
+  }
+  .section h2{
+    font-family:'Shippori Mincho',serif;
+    font-weight:800;
+    font-size:24px;
+    line-height:1.5;
+    margin:14px 0 20px;
+    color:var(--plum);
+  }
+  .section p{
+    font-size:14.5px;
+    line-height:1.9;
+    color:var(--ink);
+    margin:0 0 12px;
+  }
+  .divider{
+    width:56px;
+    height:3px;
+    border-radius:3px;
+    background:linear-gradient(90deg,var(--rose),var(--gold));
+    margin:6px 0 18px;
+  }
+
+  /* placeholder image blocks — user will replace all images */
+  .img-slot{
+    border:1.5px dashed var(--rose);
+    background:repeating-linear-gradient(135deg,#fff, #fff 10px, #fdeef1 10px, #fdeef1 20px);
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:var(--rose-deep);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.05em;
+    padding:14px;
+    min-height:110px;
+  }
+  .img-slot span{opacity:.75;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:38px 26px 30px;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(246,201,210,.55), transparent 45%),
+      radial-gradient(circle at 90% 0%, rgba(201,160,99,.25), transparent 40%),
+      var(--white);
+    text-align:center;
+  }
+  .hero .badge{
+    font-size:12px;
+    letter-spacing:.16em;
+    font-weight:700;
+    color:var(--rose-deep);
+  }
+  .hero h1{
+    font-family:'Shippori Mincho',serif;
+    font-weight:800;
+    font-size:29px;
+    line-height:1.55;
+    margin:14px 0 18px;
+    color:var(--plum);
+  }
+  .hero .sub{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    line-height:1.8;
+    margin-bottom:22px;
+  }
+  .stat-row{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:26px;
+    flex-wrap:wrap;
+  }
+  .stat{
+    background:var(--white);
+    border:1px solid var(--blush);
+    border-radius:14px;
+    padding:10px 14px;
+    font-size:11px;
+    text-align:center;
+    color:var(--ink-soft);
+  }
+  .stat b{
+    display:block;
+    font-family:'Shippori Mincho',serif;
+    font-size:17px;
+    color:var(--rose-deep);
+  }
+  .profile-card{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:linear-gradient(90deg,var(--cream-deep),var(--white));
+    border:1px solid var(--blush);
+    border-radius:999px;
+    padding:8px 16px 8px 8px;
+    text-align:left;
+  }
+  .profile-card .avatar{
+    width:44px;height:44px;border-radius:50%;
+    flex:0 0 auto;
+  }
+  .profile-card .name{font-size:13px;font-weight:700;color:var(--plum);}
+  .profile-card .role{font-size:11px;color:var(--ink-soft);}
+
+  /* ---------- first reaction ---------- */
+  .reaction-item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:var(--cream);
+    border-radius:16px;
+    padding:14px 16px;
+    margin-bottom:10px;
+  }
+  .reaction-item .num{
+    font-family:'Shippori Mincho',serif;
+    font-weight:800;
+    font-size:15px;
+    color:var(--gold);
+    flex:0 0 auto;
+  }
+  .reaction-item p{margin:0;font-size:13.5px;line-height:1.75;}
+
+  .summary-box{
+    margin-top:20px;
+    background:linear-gradient(160deg,var(--blush),var(--cream-deep));
+    border-radius:18px;
+    padding:18px 18px 14px;
+  }
+  .summary-box .label{
+    font-size:12px;font-weight:700;color:var(--rose-deep);margin-bottom:8px;
+  }
+  .summary-box ol{margin:0;padding-left:18px;}
+  .summary-box li{font-size:13.5px;line-height:1.8;margin-bottom:6px;}
+
+  /* ---------- how to / steps ---------- */
+  .step-card{
+    background:var(--white);
+    border:1px solid var(--blush);
+    border-radius:20px;
+    padding:20px 18px;
+    margin-bottom:18px;
+    box-shadow:0 8px 24px rgba(200,92,120,.06);
+  }
+  .step-tag{
+    display:flex;align-items:center;gap:8px;margin-bottom:8px;
+  }
+  .step-tag .step-no{
+    font-family:'Shippori Mincho',serif;
+    font-weight:800;
+    color:var(--white);
+    background:linear-gradient(135deg,var(--rose),var(--mauve));
+    width:30px;height:30px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;
+  }
+  .step-tag .step-label{font-size:11px;letter-spacing:.12em;color:var(--gold);font-weight:700;}
+  .step-card h3{
+    font-family:'Shippori Mincho',serif;
+    font-size:18px;
+    margin:0 0 10px;
+    color:var(--plum);
+  }
+  .step-card p{font-size:13.5px;line-height:1.8;margin:0 0 12px;}
+  .img-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+  .img-grid .img-slot{min-height:80px;font-size:11px;}
+  .before-after{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .before-after .cap{font-size:10.5px;text-align:center;margin-top:6px;color:var(--ink-soft);}
+
+  /* ---------- why now ---------- */
+  .quote-note{
+    border-left:3px solid var(--gold);
+    padding-left:14px;
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.8;
+  }
+
+  /* ---------- prompt ---------- */
+  .prompt-box{
+    background:var(--plum);
+    color:#f3e6ec;
+    border-radius:16px;
+    padding:16px;
+    font-size:11.5px;
+    line-height:1.85;
+    max-height:320px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    position:relative;
+    white-space:pre-wrap;
+  }
+  .prompt-box::-webkit-scrollbar{width:6px;}
+  .prompt-box::-webkit-scrollbar-thumb{background:var(--rose);border-radius:3px;}
+  .prompt-box h4{
+    font-size:12px;margin:14px 0 6px;color:var(--gold);
+  }
+  .prompt-box h4:first-child{margin-top:0;}
+  .scroll-hint{
+    text-align:center;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    margin-top:8px;
+  }
+  .copy-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--white);
+    color:var(--rose-deep);
+    font-size:12px;font-weight:700;
+    border-radius:999px;
+    padding:8px 16px;
+    border:1px solid var(--blush);
+    margin:12px 0 6px;
+    font-family:inherit;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .copy-btn.copied{
+    background:var(--rose-deep);
+    color:#fff;
+    border-color:var(--rose-deep);
+  }
+  .note-list{
+    background:var(--cream);
+    border-radius:16px;
+    padding:16px 18px;
+    margin-top:16px;
+  }
+  .note-list .label{font-size:12px;font-weight:700;color:var(--rose-deep);margin-bottom:8px;}
+  .note-list ul{margin:0;padding-left:18px;}
+  .note-list li{font-size:12.5px;line-height:1.8;margin-bottom:5px;color:var(--ink-soft);}
+
+  /* ---------- next step ---------- */
+  .next-step{
+    background:
+      radial-gradient(circle at 85% 0%, rgba(246,201,210,.5), transparent 45%),
+      var(--cream);
+  }
+  .gift-tag{
+    display:inline-block;
+    background:var(--rose-deep);
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+  .next-step-copy{
+    background:var(--white);
+    border-radius:18px;
+    padding:20px 18px;
+    border:1px solid var(--blush);
+    margin-bottom:20px;
+  }
+  .next-step-copy p{
+    font-size:14px;
+    line-height:2;
+    margin:0 0 12px;
+    color:var(--ink);
+  }
+  .next-step-copy p:last-child{margin-bottom:0;font-weight:700;color:var(--rose-deep);}
+
+  .book-cover{
+    width:100%;
+    border-radius:18px;
+    display:block;
+    box-shadow:0 16px 30px rgba(150,80,100,.22);
+    margin-bottom:22px;
+  }
+
+  .line-btn{
+    display:block;
+    text-align:center;
+    text-decoration:none;
+    background:linear-gradient(135deg,var(--rose) 0%, var(--rose-deep) 55%, var(--mauve) 100%);
+    color:#fff;
+    font-weight:700;
+    font-size:15.5px;
+    letter-spacing:.03em;
+    padding:18px 20px;
+    border-radius:999px;
+    box-shadow:0 12px 26px rgba(200,92,120,.35);
+  }
+  .line-btn .small{
+    display:block;
+    font-size:11px;
+    font-weight:500;
+    letter-spacing:.14em;
+    opacity:.9;
+    margin-bottom:4px;
+  }
+  .line-note{
+    font-size:11px;
+    color:var(--ink-soft);
+    text-align:center;
+    line-height:1.8;
+    margin-top:14px;
+  }
+
+  /* ---------- footer ---------- */
+  .footer{
+    padding:36px 26px 46px;
+    text-align:center;
+    background:var(--cream-deep);
+  }
+  .ig-simple{max-width:340px;margin:0 auto;}
+  .ig-handle-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    color:var(--gold);
+    font-weight:700;
+    font-size:15px;
+    margin-bottom:14px;
+  }
+  .ig-name{font-size:13.5px;line-height:1.8;color:var(--ink);margin:0 0 14px;}
+  .footer p.copyright{font-size:11px;color:var(--ink-soft);margin:0;opacity:.7;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ===================== HERO ===================== -->
+  <div class="hero">
+    <div class="badge">📷 スマホ×ChatGPT副業</div>
+    <h1>あなたのスマホ、<br>5万円を眠らせてます。</h1>
+    <p class="sub">日本の風景写真をChatGPTで"売れる1枚"に変える3ステップ</p>
+
+    <div class="stat-row">
+      <div class="stat"><b>①</b>写真を選ぶ</div>
+      <div class="stat"><b>②</b>写真を加工する</div>
+      <div class="stat"><b>③</b>出品する</div>
+    </div>
+  </div>
+
+  <!-- ===================== FIRST REACTION ===================== -->
+  <div class="section">
+    <span class="eyebrow">FIRST REACTION</span>
+    <h2>たぶん、<br>こう思いましたよね。</h2>
+    <p>動画では「スマホに眠っている日本の風景写真を、ChatGPTで売れる1枚に変える」という話をしました。<br>ただ、見た直後の正直な感想は、こっちだったと思います。</p>
+
+    <div class="reaction-item">
+      <div class="num">01</div>
+      <p>プロでもないのに、自分のスマホ写真が売れるわけがない</p>
+    </div>
+    <div class="reaction-item">
+      <div class="num">02</div>
+      <p>写真の加工なんてやったことがない</p>
+    </div>
+    <div class="reaction-item">
+      <div class="num">03</div>
+      <p>ストックフォトって、出品のハードルが高そう</p>
+    </div>
+
+    <p style="margin-top:14px;">3つとも、私も最初はそう思っていました。<br>① 求められているのは作品性より<b>使いやすさ</b>です。とくに「日本の景色」は海外から探されている一方で、出している人が少ない領域です。<br>② 加工はChatGPTがやります。こちらは写真を渡して、プロンプトを貼るだけです。<br>③ 手順はこの先に3ステップで書いています。出品時に確認すべきルールも一緒にまとめました。</p>
+
+    <div class="summary-box">
+      <div class="label">📌 3行でいうと</div>
+      <ol>
+        <li>日本の風景写真を、ChatGPTで"プロ品質"に加工する。</li>
+        <li>Shutterstockに出品する（1点5,000円が目安）。</li>
+        <li>普段の生活をしながら、月5万円を狙える。</li>
+      </ol>
+    </div>
+
+    <p style="margin-top:16px;">🤳 スマホに眠っている風景写真、実は売り物になります。<br>やることはたった3ステップ。今日から始められます。</p>
+  </div>
+
+  <!-- ===================== HOW TO ===================== -->
+  <div class="section" style="background:var(--cream);">
+    <span class="eyebrow">HOW TO</span>
+    <h2>やることは、<br>たったの3ステップ</h2>
+    <p>仕事で忙しい人でもできる範囲です。順番に見ていきます。</p>
+
+    <div class="step-card">
+      <div class="step-tag"><div class="step-no">1</div><div class="step-label">STEP 1</div></div>
+      <h3>🏞️「日本の風景」写真を選ぶ</h3>
+      <p>条件はシンプル。<b>日本の景色であること</b>、それだけです。</p>
+      <div class="img-grid">
+        <img src="fuji.png" alt="富士山と湖" style="width:100%;border-radius:12px;object-fit:cover;height:110px;">
+        <img src="izakaya.png" alt="居酒屋横丁の夜景" style="width:100%;border-radius:12px;object-fit:cover;height:110px;">
+        <img src="kyoto-street.png" alt="京都の路地" style="width:100%;border-radius:12px;object-fit:cover;height:110px;">
+        <img src="castle-sakura.png" alt="桜と城" style="width:100%;border-radius:12px;object-fit:cover;height:110px;">
+      </div>
+      <p style="font-size:11.5px;color:var(--ink-soft);margin:0;">OK例：富士山／街並みの夜景／路地／桜と城。どれもスマホ撮影です。</p>
+    </div>
+
+    <div class="step-card">
+      <div class="step-tag"><div class="step-no">2</div><div class="step-label">STEP 2</div></div>
+      <h3>💬 ChatGPTで"プロ品質"に加工する</h3>
+      <p>写真とプロンプト（下記）をChatGPTに送るだけ。<br>数十秒で、プロカメラマンが撮ったような1枚に変わります。</p>
+      <div class="before-after">
+        <div>
+          <img src="bamboo-before.png" alt="加工前の竹林写真" style="width:100%;border-radius:12px;object-fit:cover;height:130px;">
+          <div class="cap">加工前</div>
+        </div>
+        <div>
+          <img src="bamboo-after.png" alt="加工後の竹林写真" style="width:100%;border-radius:12px;object-fit:cover;height:130px;">
+          <div class="cap">加工後</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-tag"><div class="step-no">3</div><div class="step-label">STEP 3</div></div>
+      <h3>🛒 Shutterstockで出品する</h3>
+      <p>アカウントを作って出品するだけ。<br>1点5,000円が目安、普段の生活をしながら月5万円を狙えます。</p>
+      <img src="shutterstock.png" alt="Shutterstock" style="width:100%;border-radius:12px;display:block;">
+    </div>
+  </div>
+
+  <!-- ===================== WHY NOW ===================== -->
+  <div class="section">
+    <span class="eyebrow">WHY NOW</span>
+    <h2>なぜ、今なのか</h2>
+    <p>2026年4月リリースの「ChatGPT Images 2.0」で、画像のクオリティが大きく進化。<br>AIっぽい不自然さが減り、プロ品質の1枚が狙いやすくなりました。</p>
+    <p>日本の風景・日本文化は、ストックフォトの世界でも根強い需要があるジャンルです。</p>
+    <p class="quote-note">出典：ASCII.jp「クオリティが大幅向上した画像生成AI『ChatGPT Images 2.0』」</p>
+  </div>
+
+  <!-- ===================== PROMPT ===================== -->
+  <div class="section" style="background:var(--cream);">
+    <span class="eyebrow">PROMPT</span>
+    <h2>STEP2で使う<br>プロンプト</h2>
+    <p>コピーしてChatGPTに貼り付け、写真と一緒に送るだけです。</p>
+    <button type="button" class="copy-btn" id="copyPromptBtn" onclick="copyPromptText()">📋 STEP2｜写真をプロ品質に加工する コピー</button>
+    <div class="prompt-box" id="promptText">あなたは、世界的な広告・ファッション・商業写真の現場で活躍する
+プロフェッショナルフォトグラファー兼ハイエンドレタッチャーです。
+
+入力されたスマートフォン撮影の写真を分析し、被写体の魅力と元画像の自然さを維持したまま、
+プロカメラマンがフルサイズの高級カメラと高性能レンズを使用して撮影したような、最高品質の写真へ仕上げてください。
+
+<h4>## 最重要方針</h4>
+・元写真の人物、商品、建物、風景、構図、服装、表情、ポーズ、形状、質感を正確に維持する
+・別人化、過度な美化、輪郭の変形、不要な描き足しをしない
+・AI生成画像のような不自然さを排除する
+・過剰なHDR、過剰な彩度、過度なシャープ処理、プラスチックのような肌質を避ける
+・写真として自然で、現実的かつ高級感のある仕上がりを優先する
+・元画像に存在しない文字、ロゴ、アクセサリー、指、物体を追加しない
+・被写体の個性と撮影時の雰囲気を残しながら、技術的な欠点のみを丁寧に改善する
+
+<h4>## 画像解析と補正</h4>
+最初に写真全体を分析し、以下を自動的に最適化してください。
+
+<h4>1. 解像感・ディテール</h4>
+・4K〜8K相当の高精細な解像感へアップスケーリング
+・手ブレ、軽度のピンボケ、圧縮劣化を自然に補正
+・被写体の輪郭、髪、衣服、商品、建物などの細部を高精細化
+・不自然な輪郭線やハローを発生させず、繊細なマイクロコントラストを追加
+・元画像に存在しない偽のディテールは生成しない
+・過度なシャープネスを避け、フルサイズカメラらしい自然な解像感に仕上げる
+
+<h4>2. 露出・ダイナミックレンジ</h4>
+・白飛びしているハイライトを可能な範囲で自然に復元
+・黒つぶれしているシャドウをノイズが目立たない範囲で持ち上げる
+・明部、中間調、暗部の階調を滑らかに整える
+・被写体と背景の露出バランスを最適化
+・HDR感を強く出さず、自然で立体的なダイナミックレンジに調整
+・顔や主役となる被写体が最も見やすくなるように局所的な露出補正を行う
+
+<h4>3. カラーグレーディング</h4>
+・ホワイトバランス、色温度、色かぶりを自然に補正
+・彩度、自然な彩度、輝度、色相を被写体ごとに最適化
+・色彩のメリハリを元画像からおよそ10〜15％の範囲で強化
+・肌色、白色、黒色、空、植物、商品色を正確に維持する
+・ハイライトとシャドウに繊細な色の深みを加える
+・色を派手にしすぎず、上質でシネマティックなカラーへ調整
+・黒は潰さず、白は飛ばさず、透明感のあるニュートラルな色調に仕上げる
+
+<h4>4. ライティング</h4>
+・主被写体に自然な立体感が出るようにライティングを最適化
+・プロのスタジオ撮影のような、柔らかく方向性のある光を再現
+・顔、商品、建物などの主役に自然なハイライトと陰影を追加
+・不自然な逆光、強すぎる影、色ムラを補正
+・光源の方向と周囲の環境光を維持し、物理的に矛盾する光を追加しない
+・リムライトやキャッチライトは元写真に適合する場合のみ、ごく自然に調整する
+
+<h4>5. ノイズ・画質劣化</h4>
+・高感度ノイズ、色ノイズ、圧縮ノイズ、ブロックノイズを除去
+・暗部を滑らかにしながら、必要な質感とディテールを保持
+・肌、布、木材、金属、ガラスなどの素材感を失わない
+・ノイズ除去によるのっぺりした質感を避ける
+・スマートフォン特有の過剰な輪郭強調やデジタル感を抑える
+
+<h4>6. 背景と被写界深度</h4>
+・主被写体と背景を正確に分離
+・被写体の輪郭、髪の毛、衣服の端を自然に維持
+・背景は写真の内容に最適な強さで、滑らかにぼかす
+・85mm F1.4で撮影したような上品なポートレートボケ、または24mm F1.4で撮影したような広角表現を、元写真の構図に合わせて自動選択
+・ボケは被写体との距離に応じて段階的に変化させる
+・すべてを均一にぼかさず、前景・主被写体・背景の奥行きを自然に表現
+・二線ボケ、輪郭のにじみ、髪や指の欠損、不自然な境界を発生させない
+・背景を完全に変更せず、元の場所と雰囲気を維持する
+
+<h4>7. レタッチ</h4>
+人物が写っている場合は、以下を自然な範囲で適用してください。
+・肌の色ムラ、軽い赤み、テカリ、目立つ一時的な肌荒れを控えめに補正
+・毛穴、産毛、肌本来の質感は残す
+・目、眉、唇、髪の毛を鮮明にするが、形や大きさは変更しない
+・歯や白目を不自然に白くしない
+・顔の骨格、体形、年齢、表情を変更しない
+・美肌加工は最小限にとどめ、自然で健康的な印象にする
+
+商品や料理が写っている場合は、以下を適用してください。
+・素材の質感、反射、透明感、立体感を強化
+・商品本来の色、形状、ロゴ、文字を正確に保持
+・料理は過度に鮮やかにせず、自然に美味しそうな色と光沢に調整
+・パッケージやラベルの文字を変更・生成しない
+
+<h4>8. 不要物の除去</h4>
+・センサー汚れ、レンズの汚れ、小さなゴミ、不要な反射を自然に除去
+・明らかに不要な写り込み、背景の小さな人物、余計な影を違和感なく補正
+・主被写体に関係する物体や、写真の文脈上必要な要素は削除しない
+・除去した部分は周囲の光、質感、遠近感と正確に一致させる
+
+<h4>## カメラ表現</h4>
+写真の内容に応じて、以下の撮影特性を自然に再現してください。
+
+<h4>ポートレートの場合</h4>
+・フルサイズカメラ ／ 85mm単焦点レンズ ／ 絞り：F1.4〜F2.8 ／ ISO：50〜400相当
+・シャッタースピード：1/125秒以上を想定
+・瞳または顔に正確なフォーカス／柔らかな背景ボケ／自然な肌階調／商業ポートレート品質
+
+<h4>風景・建築・室内の場合</h4>
+・フルサイズカメラ ／ 24mm〜35mmの高性能広角レンズ ／ 絞り：F4〜F8 ／ ISO：50〜400相当
+・垂直線と水平線を自然に補正／画面周辺まで高い解像感
+・遠近感を過度に変形させない／空間の広さと奥行きを自然に表現
+
+<h4>商品・料理の場合</h4>
+・フルサイズカメラ ／ 50mm〜100mmの高性能レンズ ／ 絞り：F2.8〜F8 ／ ISO：50〜200相当
+・商品全体または料理の主要部分に正確なフォーカス／柔らかいスタジオライティング
+・素材感と立体感を明確に表現／高級広告写真のような仕上がり
+
+<h4>## 仕上げのスタイル</h4>
+ナチュラル／フォトリアル／高解像度／高級感／清潔感／繊細な立体感
+控えめで上質なシネマティック表現／商業広告に使用できる完成度
+プロのRAW現像とハイエンドレタッチを施したような品質
+スマートフォン写真らしいデジタル感を抑えた、フルサイズカメラ特有の階調と空気感
+
+<h4>## 禁止事項</h4>
+別人への変更／顔、体形、ポーズ、服装、商品の形状の改変／過剰な美肌加工
+過剰なHDR／過剰な彩度／過剰なシャープネス／不自然なAIディテール
+偽物の文字、ロゴ、模様の生成／指、歯、目、髪の毛、アクセサリーの変形
+被写体の輪郭が溶けるような背景ぼかし／元画像の重要な要素の削除
+フィルター感が強い加工／イラスト風、CG風、絵画風への変更
+写真の内容を別の場面に置き換えること
+
+<h4>## 最終出力</h4>
+解説文、比較画像、加工手順、設定値、英語や日本語の補足テキストは出力しないでください。
+
+入力写真を直接編集し、プロカメラマンがフルサイズカメラで撮影し、RAW現像と商業レベルのレタッチを施したような、自然でリアルな最高品質の完成画像を1枚だけ出力してください。
+
+出力品質：
+Ultra-high-resolution, professional full-frame camera quality, realistic 4K–8K detail, natural RAW development, high-end commercial retouching, physically accurate lighting, realistic depth of field, clean textures, cinematic but natural color grading.</div>
+    <p class="scroll-hint">↕ スクロールして全文を読めます</p>
+    <p style="font-size:11.5px;color:var(--ink-soft);margin-top:10px;">※長いプロンプトですが、これがそのままコピペで使える完成版です。</p>
+
+    <div class="note-list">
+      <div class="label">出品前の注意点まとめ</div>
+      <ul>
+        <li>Shutterstockは生成AI画像の出品ルールが変わることがあるので、出品前に最新のガイドラインを確認する</li>
+        <li>実在の建物・看板・人物が写り込む場合は、権利関係に配慮する（STEP2のプロンプトで対応）</li>
+        <li>「日本の景色」以外は競合が多く、差別化しづらいので避ける</li>
+        <li>1点5,000円は目安であり、実際の販売価格・売上を保証するものではない</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===================== NEXT STEP ===================== -->
+  <div class="section next-step">
+    <span class="eyebrow">NEXT STEP</span>
+    <h2>写真は、AIで稼ぐやり方の<br>ひとつでしかありません</h2>
+
+    <div class="next-step-copy">
+      <p>50代でもできるAIを活用した副業を発信しています。</p>
+      <p>副業ってなんか怪しい。本当に収入があるの？やってみたいけど何をどうしたらいいかわからない。こんな風に思って今まで簡単そうなノウハウや動画を集めて何もしない私でした。</p>
+      <p>でも、やり方を知って正しく行動したらびっくりするほど生活が一変しました。特別なスキルがなくてもあなたの経験が武器になります。どういう事？って思いますよね。</p>
+      <p>パソコンが苦手な私でも毎月パート代の4〜5倍の収入を得られるようになった方法をご紹介しています。</p>
+      <p>本気で毎月20万増やしたい方には本気でそれを教えるためのサポート会も無料でおこなっています。知りたい方のみ、ここをタップしてください⬇︎</p>
+    </div>
+
+    <img src="book-cover.png" alt="AIマネタイズの教科書" class="book-cover">
+
+    <a class="line-btn" href="https://utage-system.com/line/open/nj3MC6diybeh?mtid=D7R7OLXWMBeV">
+      <span class="small">＼ タップして ／</span>
+      公式LINEで無料で受け取る
+    </a>
+    <p class="line-note">※ 内容は予告なく変更・終了する場合があります。受け取りはお早めにどうぞ。<br>タップすると、公式LINEの友だち追加ページへ移動します。</p>
+  </div>
+
+  <!-- ===================== FOOTER ===================== -->
+  <div class="footer">
+    <div class="ig-simple">
+      <div class="ig-handle-row">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="6" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/></svg>
+        <span>Instagram：@notsun_ai_za...</span>
+      </div>
+      <p class="ig-name">のーつん｜50代から始めるAI×自宅ワーク</p>
+      <p class="copyright">© 2026 のーつん. All Rights Reserved.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function copyPromptText(){
+  var el = document.getElementById('promptText');
+  var text = el.innerText || el.textContent;
+  var btn = document.getElementById('copyPromptBtn');
+  function done(){
+    var original = btn.innerHTML;
+    btn.innerHTML = '✅ コピーしました！';
+    btn.classList.add('copied');
+    setTimeout(function(){
+      btn.innerHTML = original;
+      btn.classList.remove('copied');
+    }, 2000);
+  }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text, done); });
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+function fallbackCopy(text, done){
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); done(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+</script>
+</body>
+</html>
